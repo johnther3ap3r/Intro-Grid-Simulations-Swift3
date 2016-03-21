@@ -12,3 +12,5 @@ In the CSP Arrays course, you learned about 1 and 2 dimensional arrays, and in t
 As stated before, you need to have completed the CSP Arrays course. Find the Playgrounds file for that course and have it open, so that you can copy your code easily.
 
 You'll also need our starter Xcode project for Grid Simulations, available on GitHub [here](https://github.com/yariza/Grid-Simulations-Xcode). Go ahead and clone or download the project from the site, and open the enclosing file named `Grid-Simulations.xcodeproj`. You're ready to begin!
+
+TODO: Add blurb about requirements for Apple account to develop on phone.
