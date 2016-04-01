@@ -11,8 +11,8 @@ Here are the rules that we're going to decide on for this Simulation:
   1. Create a 10x10 grid randomly populated with a 50% chance of a 🌲 tile, or empty otherwise.
   2. Choose a random grid location. Place a 🔥 tile there.
 - Update loop:
-  1. 🔥 has a 20% chance of dying out, replacing itself with an empty tile.
-  2. Otherwise, 🔥 has a 30% chance of spreading to each neighboring empty tile, and a 50% chance of spreading to each neighboring 🌲 tile.
+  1. 🔥 has a 5% chance of dying out, replacing itself with an empty tile.
+  2. Otherwise, 🔥 has a 50% chance of spreading to each neighboring 🌲 tile.
   3. Any unaffected 🌲 tiles have a 5% chance to grow another 🌲 tile in a neighboring empty tile.
 
 Sounds like fun! To begin, let's make a new file to denote that we are creating a new Simulation.
@@ -104,13 +104,13 @@ Let's move on and apply this logic to our `setup()` function.
 
 Our guidelines mentioned that we were to create a 10x10 grid, randomly filled with a 50% chance of 🔥. So, let's start by giving ourselves a 2D array!
 
-From inside the `ForestFireSimulation` class, our grid variable can be accessed via `map`. So, let's set `map` to be a new 2D array:
+From inside the `ForestFireSimulation` class, our grid variable can be accessed via `grid`. So, let's set `grid` to be a new 2D array:
 
 > [action]
 > Insert the following into the `setup()` function in `ForestFireSimulation.swift`:
 >
 ```swift
-map = [[Character?]](count: 10, repeatedValue: [Character?](count: 10, repeatedValue: nil))
+grid = [[Character?]](count: 10, repeatedValue: [Character?](count: 10, repeatedValue: nil))
 ```
 
 Now let's iterate through each tile in our 2D grid, and set a tile to 🌲 based on a 50% chance. But how do we do that?
@@ -123,11 +123,11 @@ Go ahead and write the code to populate the tiles with 🌲. Do you remember how
 > Done? Your `setup()` function should look something like this:
 >
 ```swift
-map = [[Character?]](count: 10, repeatedValue: [Character?](count: 10, repeatedValue: nil))
+grid = [[Character?]](count: 10, repeatedValue: [Character?](count: 10, repeatedValue: nil))
 for x in 0..<10 {
     for y in 0..<10 {
         if Float(random()) / Float(RAND_MAX) < 0.5 {
-            map[x][y] = "🌲"
+            grid[x][y] = "🌲"
         }
     }
 }
@@ -159,14 +159,14 @@ Let's see if you can write this code – place it at the end of the `setup()` f
 ```swift
 let x = random() % 10
 let y = random() % 10
-map[x][y] = "🔥"
+grid[x][y] = "🔥"
 ```
 
 Run your code again. You should now see a single 🔥 placed at a random location!
 
-# The Update loop
+# Retrieving neighbors
 
-Now let's make our simulation update, just like we did in Game of Life.
+Before we dive into the update loop, we'll write ourselves some helper functions that will retrieve the neighbors of each position in the grid.
 
 First of all, we'll make ourselves a helper function, that determines if a grid position is in bounds of the grid, and returns a boolean. Let's call this function `isLegalPosition(x: Int, y: Int)`.
 
@@ -177,7 +177,7 @@ First of all, we'll make ourselves a helper function, that determines if a grid 
 func isLegalPosition(x: Int, _ y: Int) -> Bool {
 }
 ```
-> Now, insert code that return true if the given x and y coordinates are inside the `map` bounds, and false otherwise.
+> Now, insert code that return true if the given x and y coordinates are inside the `grid` bounds, and false otherwise.
 
 <!--  -->
 
@@ -185,58 +185,105 @@ func isLegalPosition(x: Int, _ y: Int) -> Bool {
 > Your code should look like this:
 >
 ```swift
-if 0 <= x && x < map.count &&
-   0 <= y && y < map[0].count {
+if 0 <= x && x < grid.count &&
+   0 <= y && y < grid[0].count {
     return true
 } else {
     return false
 }
 ```
 
+Next, we'll write a function `getNeighborPositions(originX: Int, _ originY: Int)`, whose function signature looks like this:
+
+```swift
+func getNeighborPositions(originX: Int, _ originY: Int) -> [(x: Int, y: Int)] {
+}
+```
+
+What's this return type, you ask? The parentheses syntax represents Swift's _tuple_ type, which you can read about [here](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID329). Basically, it's a way for you to quickly house multiple variables of potentially different types in one container, without creating a class or a struct. So in this example, our function returns an _array_ of _tuples_ – containing two `Int`s, for the x and y positions.
+
+Tuples can be instantiated just like this:
+
+```swift
+let tuple = (2, 3)
+```
+
+...and if the tuple is a _named_ tuple, as is the case in our return statement, you can access the individual elements like this:
+
+```swift
+let namedTuple = (x: 2, y: 3)
+let x = namedTuple.x
+let y = namedTuple.y
+```
+
+Let's try writing code that given an _origin_ location on the grid, returns all of the _legal_ grid positions neighboring it, as an array of tuples. How do you know if a grid position is legal? Call the function you just wrote – `isLegalPosition()`! Remember, you can use the `for x in a...b` syntax to traverse from values `a` and `b` (inclusively), and you can append to an array by calling `.append()`.
+
+>[solution]
+> Your code should look like this:
+>
+```swift
+func getNeighborPositions(originX: Int, _ originY: Int) -> [(x: Int, y: Int)] {
+    var neighbors: [(x: Int, y: Int)] = []
+    for x in (originX - 1)...(originX + 1) {
+        for y in (originY - 1)...(originY + 1) {
+            if x == originX && y == originY {
+                continue;
+            }
+            if isLegalPosition(x, y) {
+                neighbors.append((x, y))
+            }
+        }
+    }
+    return neighbors
+}
+```
+
+# The Update loop
+
 Great! Now we are ready to start writing code for the fire propagation.
 
-In the update loop, we'll start by making a new temporary array, where we'll store the results of the next step in the Simulation – just like we did in Game of Life. Unlike Game of Life, though, we'll need to have this `newMap` be accessible from other functions, for reasons apparent later. So, we'll make it a class-wide variable in `ForestFireSimulation`.
+In the update loop, we'll start by making a new temporary array, where we'll store the results of the next step in the Simulation – just like we did in Game of Life. Unlike Game of Life, though, we'll need to have this `newGrid` be accessible from other functions, for reasons apparent later. So, we'll make it a class-wide variable in `ForestFireSimulation`.
 
 > [action]
 > Insert this code in the class `ForestFireSimulation`:
 >
 ```swift
-var newMap: [[Character?]] = []
+var newGrid: [[Character?]] = []
 ```
 > Insert this code in `update()`:
 >
 ```swift
-newMap = map
-for x in 0..<map.count {
-    for y in 0..<map[x].count {
+newGrid = grid
+for x in 0..<grid.count {
+    for y in 0..<grid[x].count {
 >
     }
 }
-map = newMap
+grid = newGrid
 ```
 
-Now, we check for the state of the tile in `map`. If it's 🔥, we'll continue with our logic, first checking if it should be extinguished (20% chance).
+Now, we check for the state of the tile in `grid`. If it's 🔥, we'll continue with our logic, first checking if it should be extinguished (20% chance).
 
 > [action]
-> Can you write this code? Inside the for loop, check for the value of the current tile. If it is 🔥, roll a random number between 0 and 1. If the number is less than 0.2, set the tile to `nil`. Remember to set the new value in `newMap`, though!
+> Can you write this code? Inside the for loop, check for the value of the current tile. If it is 🔥, roll a random number between 0 and 1. If the number is less than 0.2, set the tile to `nil`. Remember to set the new value in `newGrid`, though!
 
 <!--  -->
 
 > [solution]
 >
 ```swift
-var newMap = map
-for x in 0..<map.count {
-    for y in 0..<map[x].count {
-        let tile = map[x][y]
+var newGrid = grid
+for x in 0..<grid.count {
+    for y in 0..<grid[x].count {
+        let tile = grid[x][y]
         if tile == "🔥" {
             if Float(random()) / Float(RAND_MAX) < 0.2 {
-                newMap[x][y] = nil
+                newGrid[x][y] = nil
             }
         }
     }
 }
-map = newMap
+grid = newGrid
 ```
 
 Now if the fire doesn't burn out, it should have a chance to spread to other tiles. We'll write a helper function here, since the logic for going through each of the neighbors can be tedious. We'll write a new function `spreadFire(x: Int, y: Int)` that takes in a grid position, and if it meets the right conditions, will spread a fire there.
@@ -246,13 +293,10 @@ Now if the fire doesn't burn out, it should have a chance to spread to other til
 >
 ```swift
 func spreadFire(x: Int, _ y: Int) {
-    if !isLegalPosition(x, y) {
-        return
-    }
 >
 }
 ```
-> We've written code for you that checks if the tile is in a legal position. If it isn't, it will exit. Now write code that will check if the tile at the location is 🌲 or empty. If it is empty, you will roll for a 30% chance of replacing the tile with 🔥. If it is 🌲, you will roll for a 50% chance of replacing the tile with 🔥. Remember to set the new value in `newMap`!
+> We've written code for you that checks if the tile is in a legal position. If it isn't, it will exit. Now write code that will check if the tile at the location is 🌲 or empty. If it is empty, you will roll for a 30% chance of replacing the tile with 🔥. If it is 🌲, you will roll for a 50% chance of replacing the tile with 🔥. Remember to set the new value in `newGrid`!
 
 <!--  -->
 
@@ -261,15 +305,12 @@ func spreadFire(x: Int, _ y: Int) {
 >
 ```swift
 func spreadFire(x: Int, _ y: Int) {
-    if !isLegalPosition(x, y) {
-        return
-    }
-    let tile = map[x][y]
+    let tile = grid[x][y]
     if tile == nil && Float(random()) / Float(RAND_MAX) < 0.3 {
-        newMap[x][y] = "🔥"
+        newGrid[x][y] = "🔥"
     }
     if tile == "🌲" && Float(random()) / Float(RAND_MAX) < 0.5 {
-        newMap[x][y] = "🔥"
+        newGrid[x][y] = "🔥"
     }
 }
 ```
@@ -277,7 +318,7 @@ func spreadFire(x: Int, _ y: Int) {
 <!--  -->
 
 > [action]
-> Now if the tile we encounter in `update` is 🔥 _and_ it hasn't been extinguished, let's call this function for all 8 of its neighbors. Remember, since we check for bounds in `spreadFire`, you won't have to check if you're out of range in `update`!
+> Now if the tile we encounter in `update` is 🔥 _and_ it hasn't been extinguished, let's call this function for all of its neighbors, using the results from the `getNeighborPositions()` function we wrote!
 
 <!--  -->
 
@@ -286,33 +327,30 @@ func spreadFire(x: Int, _ y: Int) {
 >
 ```swift
 public override func update() {
-    var newMap = map
-    for x in 0..<map.count {
-        for y in 0..<map[x].count {
-            let tile = map[x][y]
+    newGrid = grid
+    for x in 0..<grid.count {
+        for y in 0..<grid[x].count {
+            let tile = grid[x][y]
             if tile == "🔥" {
                 if Float(random()) / Float(RAND_MAX) < 0.2 {
-                    map[x][y] = nil
+                    newGrid[x][y] = nil
                 } else {
-                    spreadFire(newMap, x-1, y)
-                    spreadFire(newMap, x+1, y)
-                    spreadFire(newMap, x, y-1)
-                    spreadFire(newMap, x, y+1)
-                    spreadFire(newMap, x-1, y-1)
-                    spreadFire(newMap, x-1, y+1)
-                    spreadFire(newMap, x+1, y-1)
-                    spreadFire(newMap, x+1, y+1)
+                    let neighbors = getNeighborPositions(x, y)
+                    for neighbor in neighbors {
+                        spreadFire(neighbor.x, neighbor.y)
+                    }
                 }
             }
         }
     }
+    grid = newGrid
 }
 ```
 
 Great! We're almost there! All we have to do is write the same logic, but for the trees spreading. Remember, trees have a 5% chance of spreading more trees, but only if the neighboring tile is empty. Below is a function definition `spreadTree(x: Int, y: Int)` that you can use. Can you write this code yourself?
 
 ```swift
-func spreadTree(newMap: [[Character?]], _ x: Int, _ y: Int) {
+func spreadTree(x: Int, _ y: Int) {
 }
 ```
 
@@ -321,45 +359,34 @@ func spreadTree(newMap: [[Character?]], _ x: Int, _ y: Int) {
 >
 ```swift
 public override func update() {
-    var newMap = map
-    for x in 0..<map.count {
-        for y in 0..<map[x].count {
-            let tile = map[x][y]
+    newGrid = grid
+    for x in 0..<grid.count {
+        for y in 0..<grid[x].count {
+            let tile = grid[x][y]
             if tile == "🔥" {
-                if Float(random()) / Float(RAND_MAX) < 0.2 {
-                    map[x][y] = nil
+                if Float(random()) / Float(RAND_MAX) < 0.05 {
+                    newGrid[x][y] = nil
                 } else {
-                    spreadFire(newMap, x-1, y)
-                    spreadFire(newMap, x+1, y)
-                    spreadFire(newMap, x, y-1)
-                    spreadFire(newMap, x, y+1)
-                    spreadFire(newMap, x-1, y-1)
-                    spreadFire(newMap, x-1, y+1)
-                    spreadFire(newMap, x+1, y-1)
-                    spreadFire(newMap, x+1, y+1)
+                    let neighbors = getNeighborPositions(x, y)
+                    for neighbor in neighbors {
+                        spreadFire(neighbor.x, neighbor.y)
+                    }
                 }
             } else if tile == "🌲" {
-                spreadTree(newMap, x-1, y)
-                spreadTree(newMap, x+1, y)
-                spreadTree(newMap, x, y-1)
-                spreadTree(newMap, x, y+1)
-                spreadTree(newMap, x-1, y-1)
-                spreadTree(newMap, x-1, y+1)
-                spreadTree(newMap, x+1, y-1)
-                spreadTree(newMap, x+1, y+1)
+                let neighbors = getNeighborPositions(x, y)
+                for neighbor in neighbors {
+                    spreadTree(neighbor.x, neighbor.y)
+                }
             }
         }
     }
-    map = newMap
+    grid = newGrid
 }
 >
-func spreadTree(newMap: [[Character?]], _ x: Int, _ y: Int) {
-    if !isLegalPosition(x, y) {
-        return
-    }
-    let tile = map[x][y]
+func spreadTree(x: Int, _ y: Int) {
+    let tile = grid[x][y]
     if tile == nil && Float(random()) / Float(RAND_MAX) < 0.05 {
-        map[x][y] = "🌲"
+        newGrid[x][y] = "🌲"
     }
 }
 ```
