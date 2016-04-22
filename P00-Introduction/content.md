@@ -3,7 +3,7 @@ title: "Grid Simulations: Introduction"
 slug: introduction
 ---
 
-_Grid Simulations_ is an extension of the Make School CSP Arrays course. If you haven't completed the Arrays course yet, go try that out before returning here!
+_Grid Simulations_ is an extension of the Swift CSP Arrays course. If you haven't completed the Arrays course yet, go try that out before returning here!
 
 In the CSP Arrays course, you learned about 1 and 2 dimensional arrays, and in the process made the Game of Life in Swift Playgrounds. In this tutorial, you'll bring the same code you wrote there, and bring it to Xcode as an iOS project. From there, you'll be able to run the Game of Life in the iOS Simulator, or your own iPhone! Next, you'll modify your existing Game of Life logic to create a new Grid Simulation of your very own, that emulates the spread of forest fires.
 
