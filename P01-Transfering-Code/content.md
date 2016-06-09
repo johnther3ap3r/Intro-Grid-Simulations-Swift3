@@ -9,8 +9,8 @@ Our first step is to transfer your code from Swift Playgrounds to the Xcode star
 
 Here are each of the folders and their corresponding roles:
 
-- __VCs__: VC stands for View Controller, and is one of the concepts of the _Model-View-Controller programming pattern_ utilized by Apple's user interface code. The View Controller is essentially responsible for transferring data and data changes from the "Model" (the data which we want to represent on the screen), to the "View" (the visual representation of our data). Our project only has one View Controller: `GameViewController`, which sets up the Simulation and a scene to display it. We'll edit this when we want to display different scenes than our default Game of Life simulation.
-  - You can learn more about the MVC pattern at Apple's website, [here](https://developer.apple.com/library/mac/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html).
+- __VCs__: VC stands for View Controller, and is one of the concepts of the _Model-View-Controller programming pattern_ utilized by Apple's user interface code. The View Controller is essentially responsible for transferring data and data changes from the "Model" (the data which we want to represent on the screen), to the "View" (the visual representation of our data). Our project only has one View Controller: `GameViewController`, which sets up the Simulation and a scene to display it. We'll edit this when we want to display scenes other than our default Game of Life simulation.
+  - You can learn more about the MVC pattern in [Apple's documentation](https://developer.apple.com/library/mac/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html).
 - __Utilities__: Here we have code that serves supplementary functions for our project. In this case, we have a handy `StreamReader` class that handles the reading of grid data from a .txt file.
 - __Models__: The "M" in the _MVC pattern_, the Models essentially contain code for the data we're trying to present, and logic for how that data will change. In this case, the models we have are our Simulations! You will edit code in `GameOfLifeSimulation.swift`, which will house our update logic for Game of Life.
 - __Nodes__: These files contain the behind-the-scenes code that represent the UI that you see on the screen – such as the grid, and the play/pause and step buttons. The folder is named "Node" because all of these classes inherit from SKNode – which is the generic Node class provided by Apple's SpriteKit. You won't need to touch these files for the most part.
@@ -39,40 +39,41 @@ To see the code responsible for getting this much on the screen, open up `GameVi
 let filePath = NSBundle.mainBundle().pathForResource("map01", ofType: "txt")!
 let sim = GameOfLifeSimulation(file: filePath)!
 
-let palette: [Character?] = ["♡", "■", nil, nil, nil, nil, nil, nil, nil, nil]
-let size = CGSize(width: 320, height: 576)
+let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil, nil]
 
-let scene = SimulationScene(sim: sim, palette: palette, size: size)
+let scene = SimulationScene(fileNamed: "SimulationScene")!
+scene.setup(simulation: sim, palette: palette)
 ```
 
-Here, the View Controller loads up a `GameOfLifeSimulation` using filePath `map01.txt` to fill up its initial grid state, and uses it to initialize the SimulationScene, using its `sim` and `palette` variables as initialization parameters. In order to see why our Glider isn't moving, let's open up `GameOfLifeSimulation.swift`:
+Here, the View Controller loads up a `GameOfLifeSimulation` using filePath `map01.txt` to fill up its initial grid state, and uses it to setup the `SimulationScene`, using its `sim` and `palette` variables as parameters. In order to see why our Glider isn't moving, let's open up `GameOfLifeSimulation.swift`:
 
 ```swift
 public override func update() {
+
 }
 
-func countNeighbors(map: [[Character?]], x: Int, y: Int) -> Int {
+func getAlive(grid: [[Character?]], column x: Int, row y: Int) -> Int {
     return 1
 }
 
-func getAlive(map: [[Character?]], _ x: Int, _ y: Int) -> Int {
+func countNeighbors(grid: [[Character?]], column x: Int, row y: Int) -> Int {
     return 1
 }
 ```
 
-Oh no! All of our functions are empty! To fix this, we'll need to copy over our code we wrote in the CSP course over to this file, to make our Glider move.
+Oh no! All of our functions are empty! To fix this, we'll need to copy over our code we wrote in the previous Playground over to this file, to make our Glider move.
 
 # Transferring Game Of Life logic
 
 First of all, we need to transfer our logic for `countNeighbors` and `getAlive`, the functions we wrote to count the number of alive neighbors for each cell.
 
 > [action]
-> Go to Page 5 of our Swift Playgrounds course. Copy over the contents of function `getAlive`, and copy it to the empty `getAlive` function in Xcode, getting rid of the placeholder `return 1` statement. Do the same for function `countNeighbors`.
+> Go to Page 6 of our Swift Playgrounds course. Copy over the contents of function `getAlive`, and copy it to the empty `getAlive` function in Xcode, getting rid of the placeholder `return 1` statement. Do the same for function `countNeighbors`.
 
 Great! Now we're ready to copy over the update loop for Game Of Life.
 
 > [action]
-> Go to Page 6 of the Swift Playgrounds course. Copy over the contents of function `update` over to the corresponding function in `GameViewController.swift` in the Xcode project.
+> Go to Page 7 of the Swift Playgrounds course. Copy over the contents of function `update` over to the corresponding function in `GameViewController.swift` in the Xcode project.
 >
 > Now run the project! Click the "Start" triangle at the top left.
 
