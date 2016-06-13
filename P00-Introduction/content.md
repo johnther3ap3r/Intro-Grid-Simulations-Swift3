@@ -11,4 +11,4 @@ As stated before, you need to have completed the Arrays and Loops Playground. Op
 
 If you want to run this on your iPhone, you'll need to have your iOS developer account set up.
 
-You'll also need our starter Xcode project for Grid Simulations, available on  [here](https://github.com/MakeSchool-Tutorials/Intro-Arrays-Loops-Swift/archive/master.zip). Go download the project, unzip the folder and open the enclosing file named `Grid-Simulations.xcodeproj`. You're ready to begin!
+You'll also need our starter Xcode project for Grid Simulations, available on  [here](https://github.com/MakeSchool-Tutorials/Intro-Grid-Simulations-Swift-Starter/archive/master.zip). Go download the project, unzip the folder and open the enclosed file named `Grid-Simulations.xcodeproj`. You're ready to begin!
