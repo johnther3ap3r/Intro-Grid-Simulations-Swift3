@@ -300,6 +300,8 @@ public override func update() {
 }
 ```
 
+![Growing trees](./bruceSprucesteen.png)
+
 Run your code and tap the Play button! Spend some time watching the trees grow... It might take a little while before you see one popup (`0.1%` is small) but it's still pretty peaceful.
 
 # Burning trees and spreading fire
@@ -344,6 +346,8 @@ public override func update() {
     grid = newGrid
 }
 ```
+
+![It was always burning since the world's been turning](./weDidntStartTheFire.png "It was always burning, since the world's been turning")
 
 Ready for some destruction to balance out the creation from the last step? Run your code and tap the Play button. When you're ready to go, select 🔥 from the palette and tap a tile, and sit back while the forest gets engulfed in fire. Pretty scary, huh?
 
