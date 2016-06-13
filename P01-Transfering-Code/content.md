@@ -74,7 +74,7 @@ First of all, we need to transfer our logic for `countNeighbors` and `getAlive`,
 Great! Now we're ready to copy over the update loop for Game Of Life.
 
 > [action]
-> Go to Page 7 of the Swift Playgrounds course. Copy over the contents of function `update` over to the corresponding function in `GameViewController.swift` in the Xcode project.
+> Go to Page 7 of the Swift Playgrounds course. Copy over the contents of function `update` over to the corresponding function in `GameOfLifeSimulation.swift` in the Xcode project.
 >
 > Now run the project! Click the "Start" triangle at the top left.
 
