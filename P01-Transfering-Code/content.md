@@ -39,9 +39,9 @@ To see the code responsible for getting this much on the screen, open up `GameVi
 let filePath = NSBundle.mainBundle().pathForResource("map01", ofType: "txt")!
 let sim = GameOfLifeSimulation(file: filePath)!
 let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil, nil]
->
+
 // Setup code for other simulations commented out
->
+
 let scene = SimulationScene(fileNamed: "SimulationScene")!
 scene.setup(simulation: sim, palette: palette)
 ```
@@ -50,13 +50,13 @@ Here, the View Controller loads up a `GameOfLifeSimulation` using filePath `map0
 
 ```swift
 public override func update() {
->
+
 }
->
+
 func getAlive(grid: [[Character?]], column x: Int, row y: Int) -> Int {
     return 1
 }
->
+
 func countNeighbors(grid: [[Character?]], column x: Int, row y: Int) -> Int {
     return 1
 }
