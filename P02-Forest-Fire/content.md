@@ -3,6 +3,9 @@ title: "Your Custom Simulation: Forest Fires!"
 slug: forest-fire
 ---
 
+> [info]
+> You can open an emoji search popup on any OS X computer by holding `control + command` and press the `space bar`.
+
 Now that we've successfully replicated our Game of Life logic in a separate Xcode project, it's time to make our own custom Simulation, complete with new rules and emojis – one that simulates the spread of forest fires!
 
 > [action]
@@ -12,9 +15,9 @@ Here is a summary of the rules that we're implementing:
 
 - **Setup:**
   1. **Palette setup:** 🌲 and 🔥 should be in the palette.
-  1. **Random seeding:** Create a 8x10 grid randomly populated with a 50% chance of a 🌲 tile, or empty otherwise.
+  1. **Random seeding:** Create a `8x10` grid randomly populated with a `50%` chance of a 🌲 tile, or empty otherwise.
 - **Update:**
-  1. **Spawning trees:** An empty tile has a 0.1% chance of becoming a 🌲.
+  1. **Spawning trees:** An empty tile has a `0.1%` chance of becoming a 🌲.
   1. **Burning trees:** 🌲 turns into 🔥 if any of it's neighbors are 🔥.
   1. **Sizzling out:** 🔥 dies out and becomes an empty tile.
 
