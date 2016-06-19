@@ -28,10 +28,10 @@ Run the project now, by hitting the "Play" triangle on the top left of your proj
 
 ![The starter code in action.](assets/starter-state.png)
 
-You should also be able to press the Start/Stop button, and also click on the screen to turn any of the grid cells into Hearts. You can click again to turn the cell back off, or you can click a different character in the palette above, to change the emoji that you want to "paint" on the grid.
+You should also be able to press the Start & Step buttons, and also tap on the grid to turn any of the grid cells into 👾. You can tap again to turn the cell back off, or you can tap a different character in the palette above, to change the emoji that you want to "paint" on the grid.
 
 > [action]
-> Run the starter code as is, and play with the UI. Try clicking the "Step" and "Play" buttons, selecting characters from the palette, and toggling cells on the grid.
+> Run the starter code as is, and play with the UI. Try tapping the "Step" and "Play" buttons, selecting characters from the palette, and toggling cells on the grid.
 
 To see the code responsible for getting this much on the screen, open up `GameViewController.swift`. As said before, this is a View Controller – responsible for setting up the scene for our simulation. The initialization code is here:
 
@@ -76,6 +76,6 @@ Great! Now we're ready to copy over the update loop for Game Of Life.
 > [action]
 > Go to Page 7 of the Swift Playgrounds course. Copy over the contents of function `update` over to the corresponding function in `GameOfLifeSimulation.swift` in the Xcode project.
 >
-> Now run the project! Click the "Start" triangle at the top left.
+> Now run the project! Tap the "Start" triangle at the top left.
 
 Does your Glider move as expected? If not, go back to your Swift playgrounds and make sure your code is correct. When you're done, you can move on to the next step!

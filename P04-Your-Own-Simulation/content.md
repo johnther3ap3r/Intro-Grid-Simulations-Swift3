@@ -22,7 +22,7 @@ The Simulation class is what you will subclass your new Simulation from. It cont
 - `init(other: Simulation)` Initializer that takes in another Simulation as input. Copies the other simulation's `grid`.
 - `init?(file: String)` Initializer that takes in a path to a text file to read the grid size and characters from. Note that in the text file, `0` denotes an empty cell. If anything goes wrong during the file parse, this function will return `nil`. Look at `map01.txt` for an example of how to create your text file.
 - `setup()` The setup function. Called once, before the Simulation is loaded onto the scene.
-- `update()` The update function. Called each time the timer ticks during play, or when the user clicks the step button.
+- `update()` The update function. Called each time the timer ticks during play, or when the user taps the step button.
 - `grid` A variable of type `[[Character?]]` that stores the state of the simulation. Read and write to this variable in your `setup()` and `update()` functions to make changes to the grid. Make sure to set it up as an `8x10` grid!
 
 ## SimulationScene
