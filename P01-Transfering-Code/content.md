@@ -38,7 +38,7 @@ To see the code responsible for getting this much on the screen, open up `GameVi
 ```swift
 let filePath = NSBundle.mainBundle().pathForResource("map01", ofType: "txt")!
 let sim = GameOfLifeSimulation(file: filePath)!
-let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil, nil]
+let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil]
 
 // Setup code for other simulations commented out
 
