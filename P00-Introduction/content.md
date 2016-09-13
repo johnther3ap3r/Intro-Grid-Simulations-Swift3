@@ -8,7 +8,7 @@ Earlier you learned about one and two dimensional arrays, and in the process mad
 > [info]
 > Xcode 8 and Swift 3 was released on on September 13th, 2016. Please make sure to update as soon as possible. [The first lesson](https://www.makeschool.com/academy/tutorial/getting-started-with-xcode-playgrounds-0afee09b-0bdb-47bd-8551-e179266b6b65/get-started-with-xcode-74d7476e-22f1-403c-99ab-b767f1a7b71e) has been updated with instructions for checking your version and updating if necessary.
 
-**This is an archive of the Xcode 7 instructions. Go back to the dashboard to find the Xcode 8 version.**
+**These are the instructions for Xcode 8. If you have Xcode 7 and cannot update, please go back to the dashboard and select the Xcode 7 version.**
 
 ## Prerequisites
 
@@ -16,4 +16,4 @@ As stated before, you need to have completed the Arrays and Loops Playground. Op
 
 If you want to run this on your iPhone, you'll need to have your iOS developer account set up.
 
-You'll also need our starter Xcode project for Grid Simulations, available on  [here](https://github.com/MakeSchool-Tutorials/Intro-Grid-Simulations-Swift-Starter/archive/master.zip). Go download the project, unzip the folder and open the enclosed file named `Grid-Simulations.xcodeproj`. You're ready to begin!
+You'll also need our starter Xcode project for Grid Simulations, available on  [here](https://github.com/MakeSchool-Tutorials/Intro-Grid-Simulations-Swift-Starter/archive/swift3.zip). Go download the project, unzip the folder and open the enclosed file named `Grid-Simulations.xcodeproj`. You're ready to begin!
