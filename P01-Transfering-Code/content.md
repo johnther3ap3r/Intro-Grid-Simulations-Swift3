@@ -36,11 +36,13 @@ You should also be able to press the Start & Step buttons, and also tap on the g
 To see the code responsible for getting this much on the screen, open up `GameViewController.swift`. As said before, this is a View Controller – responsible for setting up the scene for our simulation. The initialization code is here:
 
 ```swift
-let filePath = NSBundle.mainBundle().pathForResource("map01", ofType: "txt")!
+let filePath = Bundle.main.path(forResource: "map01", ofType: "txt")!
 let sim = GameOfLifeSimulation(file: filePath)!
 let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil]
 
+// ...
 // Setup code for other simulations commented out
+// ...
 
 let scene = SimulationScene(fileNamed: "SimulationScene")!
 scene.setup(simulation: sim, palette: palette)

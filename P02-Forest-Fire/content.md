@@ -68,21 +68,21 @@ Before we go back to the `setup()` function in `ForestFireSimulation.swift` let'
 Computers generally utilize an algorithm called [Pseudorandom Number Generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) in order to generate sufficiently random numbers. Swift provides several ways to do this, and here is one:
 
 ```swift
-random()
+arc4random()
 ```
 
 This will return a `Int` between values 0 and `RAND_MAX` – a global constant you can use in your code. So what if you instead want a `Double`, between the range 0 and 1?
 
 ```swift
-Double(random()) / Double(RAND_MAX)
+Double(arc4random()) / Double(UInt32.max)
 ```
 
 Since you'll be using this often, we've created a function called `randomZeroToOne()` that returns a `Double` between zero and one. You can use it anywhere in this app!
 
 > [info]
-> You have to cast both values to `Double`, since Swift will not implicitly convert `Int`s to `Double`s through mathematical operations. This point differentiates Swift from say, another language like Java.
+> You have to cast both values to `Double`, since Swift will not implicitly convert `Int`s to `Double`s through mathematical operations. This point differentiates Swift from other languages like Java.
 
-## Seeding your random numbers
+<!-- ## Seeding your random numbers
 
 However, because the pseudorandom algorithm is _deterministic_, it will give you the same results each time you run your app. That's not what we want!
 
@@ -96,7 +96,7 @@ srandom(time) // this "seeds" subsequent random() calls
 So, you call the `srandom()` function once in your app, before you generate any `random()` numbers – and then your random numbers will be different each time you open your app! Let's go ahead and write this `srandom()` code somewhere that runs only once – the `viewDidLoad()` function in `GameViewController`:
 
 > [action]
-> In line 17 of `GameViewController` – right after the call to `super.viewDidLoad()` – add in the above code to "seed" the random number generator, using `srandom` and the current time.
+> In line 17 of `GameViewController` – right after the call to `super.viewDidLoad()` – add in the above code to "seed" the random number generator, using `srandom` and the current time. -->
 
 Let's move on and apply this logic to our `setup()` function.
 
@@ -110,7 +110,7 @@ From inside the `ForestFireSimulation` class, our grid variable can be accessed 
 > Insert the following into the `setup()` function in `ForestFireSimulation.swift`:
 >
 ```swift
-grid = [[Character?]](count: 8, repeatedValue: [Character?](count: 10, repeatedValue: nil))
+grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count: 10)
 ```
 
 Now let's iterate through each tile in our 2D grid, and set a tile to 🌲 based on a 50% chance. But how do we do that?
@@ -126,10 +126,10 @@ Remember how we said you have access to a `randomZeroToOne()` function that retu
 > Done? Your `setup()` function should look something like this:
 >
 ```swift
-grid = [[Character?]](count: 10, repeatedValue: [Character?](count: 10, repeatedValue: nil))
+grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count: 10)
 for x in 0..<8 {
     for y in 0..<10 {
-        if Double(random()) / Double(RAND_MAX) < 0.5 {
+        if randomZeroToOne() < 0.5 {
             grid[x][y] = "🌲"
         }
     }
@@ -149,7 +149,7 @@ The modulo operator, or `%`, will return the remainder of an integer division. S
 Why is this useful? Well, say you wanted a random number between 0 and 9 – just perfect for the index position of our grid:
 
 ```swift
-random() % 10
+arc4random() % 10
 ```
 
 Since `random()` returns an `Int`, we can modulo it against 10 to return a value between 0 (inclusive) and 10 (exclusive). Now all we have to do is call this twice to get our random x and y coordinates, and set the corresponding tile to 🔥!
@@ -160,8 +160,8 @@ Let's see if you can write this code – place it at the end of the `setup()` f
 > Your code should look something like this:
 >
 ```swift
-let x = random() % 10
-let y = random() % 10
+let x = arc4random() % 10
+let y = arc4random() % 10
 grid[x][y] = "🔥"
 ```
 
@@ -173,13 +173,13 @@ Before we dive into the update loop, we should write some helper functions that 
 
 ## isLegalPosition
 
-First, let's make a helper function, that determines if a grid position is in bounds of the grid, and returns a `Bool`. Let's call this function `isLegalPosition(x x: Int, y: Int)`.
+First, let's make a helper function, that determines if a grid position is in bounds of the grid, and returns a `Bool`. Let's call this function `isLegalPosition(x: Int, y: Int)`.
 
 > [action]
 > Create a new function, right below the empty `update()` function block. It should look like this:
 >
 ```swift
-func isLegalPosition(x x: Int, y: Int) -> Bool {
+func isLegalPosition(x: Int, y: Int) -> Bool {
 >
 }
 ```
@@ -191,7 +191,7 @@ func isLegalPosition(x x: Int, y: Int) -> Bool {
 > Your `isLegalPosition` function should look like this:
 >
 ```swift
-func isLegalPosition(x x: Int, y: Int) -> Bool {
+func isLegalPosition(x: Int, y: Int) -> Bool {
     if x >= 0 && x < grid.count && y >= 0 && y < grid[0].count {
         return true
     } else {
@@ -226,7 +226,7 @@ let y = namedTuple.y
 > Create a new function, right below the `isLegalPosition` function. It should look like this:
 >
 ```swift
-func getNeighborPositions(originX: Int, _ originY: Int) -> [(x: Int, y: Int)] {
+func getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)] {
 >
 }
 ```
@@ -276,7 +276,7 @@ Now, at the start of your `update()` method, set the `newGrid` equal to `grid`. 
 >
 Inside of those loops, you should check if a tile is empty (remember, empty tiles are equal to `nil`). If it is empty, grab a value from `randomZeroToOne()` and spawn a tree with a `0.1%` chance.
 
-Remember, `1%` translates to a value of `0.01`! Make sure you are spawning trees at the correct rate. It's also extrememly important to remember that you should be reading values from `grid` and setting values to `newGrid`!
+Remember, `1%` translates to a value of `0.01`! Make sure you are spawning trees at the correct rate. It's also extremely important to remember that you should be reading values from `grid` and setting values to `newGrid`!
 
 >[solution]
 > Your `update` function should currently look like this:
