@@ -29,7 +29,7 @@ Sounds like fun! To begin, let's make a new file for our new simulation.
 
 > [action]
 > Click on the `Models` group in the left sidebar. With it selected, navigate to `File > New File`, or press `command+N`. Create a new Swift file (`iOS > Source > Swift File`) entitled `ForestFireSimulation.swift`, and put it inside the folder `Grid-Simulations-Xcode/Grid-Simulations`. Watch this video to see how to do it!
-> ![ms-video](assets/new-file.mov)
+> ![ms-video](assets/new-file.mp4)
 
 Great! Now let's make a new class for our `ForestFireSimulation`, inherited from `Simulation`.
 
